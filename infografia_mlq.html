@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<title>MLQ: Planificación con colas multinivel</title>
+<title>MLQ: Multilevel Queue Scheduling</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 :root{--r:#A71C19;--k:#1A1A1A;--g:#6B6B6B;--rl:#FBE9E9;--line:#e3d3d3}
@@ -107,50 +107,48 @@ th{background:var(--rl);color:var(--r);font-weight:600}
 <!-- ============ PÁGINA 1 ============ -->
 <section class="page">
   <div class="hero">
-    <h1>MLQ: Planificación con colas multinivel</h1>
-    <p>No todos los procesos son iguales, así que no esperan en la misma fila.</p>
+    <h1>MLQ: Multilevel Queue Scheduling</h1>
+    <p>Not all processes are equal, so they don't wait in the same line.</p>
   </div>
 
   <div class="box">
-    <h2><i>N</i>Glosario rápido</h2>
+    <h2><i>N</i>Quick glossary</h2>
     <div class="gl">
-      <div><b>CPU:</b> unidad que ejecuta las instrucciones.</div>
-      <div><b>Proceso:</b> programa en ejecución.</div>
-      <div><b>Cola de listos:</b> procesos esperando la CPU.</div>
-      <div><b>Quantum:</b> tiempo máximo de CPU por turno.</div>
-      <div><b>Expropiación</b> (<em>preemption</em>): quitar la CPU a un proceso en ejecución.</div>
-      <div><b>Inanición</b> (<em>starvation</em>): esperar indefinidamente.</div>
-      <div><b>FCFS:</b> el primero en llegar se atiende primero.</div>
-      <div><b>Round Robin:</b> turnos de un quantum, en círculo.</div>
-      <div><b>SJF:</b> primero el proceso de ráfaga más corta.</div>
-      <div><b>Tiempo de espera:</b> tiempo en la cola de listos.</div>
-      <div><b>Tiempo de retorno:</b> desde la llegada hasta terminar.</div>
+      <div><b>CPU:</b> the unit that executes instructions.</div>
+      <div><b>Process:</b> a program in execution.</div>
+      <div><b>Ready queue:</b> processes waiting for the CPU.</div>
+      <div><b>Quantum:</b> maximum CPU time per turn.</div>
+      <div><b>Preemption:</b> taking the CPU away from a running process.</div>
+      <div><b>Starvation:</b> waiting indefinitely.</div>
+      <div><b>Round Robin:</b> turns of one quantum, in a circle.</div>
+      <div><b>Waiting time:</b> time spent in the ready queue.</div>
+      <div><b>Turnaround time:</b> from arrival until completion.</div>
     </div>
   </div>
 
   <div class="box">
-    <h2><i>B</i>¿Qué es?</h2>
+    <h2><i>B</i>What is it?</h2>
     <ul>
-      <li>Algoritmo de planificación de CPU que divide la cola de listos (<em>ready queue</em>) en <b>varias colas independientes</b>.</li>
-      <li>Cada proceso se asigna de forma <b>permanente</b> a una sola cola, según una propiedad suya (tipo, prioridad, memoria…). Nunca cambia de cola.</li>
-      <li>Cada cola tiene su <b>propio algoritmo</b> de planificación.</li>
-      <li>Una regla adicional reparte la CPU <b>entre</b> las colas.</li>
+      <li>A CPU scheduling algorithm that splits the ready queue into <b>several independent queues</b>.</li>
+      <li>Each process is assigned <b>permanently</b> to a single queue, based on one of its properties. It never changes queue.</li>
+      <li>Each queue has its <b>own scheduling algorithm</b>.</li>
+      <li>An extra rule shares the CPU <b>among</b> the queues.</li>
     </ul>
   </div>
 
   <div>
-    <h2><i>G</i>Principales características</h2>
+    <h2><i>G</i>Main features</h2>
     <div class="chars">
-      <div class="ch"><div class="ic"><svg><use href="#lock"/></svg></div><b>Colas fijas</b><br>El proceso no cambia de nivel.</div>
-      <div class="ch"><div class="ic"><svg><use href="#gear"/></svg></div><b>Algoritmo propio</b><br>Cada cola usa el suyo.</div>
-      <div class="ch"><div class="ic"><svg><use href="#lay"/></svg></div><b>Regla entre colas</b><br>Prioridad estricta o % de tiempo.</div>
-      <div class="ch"><div class="ic"><svg><use href="#bolt"/></svg></div><b>Decisión rápida</b><br>Se clasifica una sola vez.</div>
-      <div class="ch"><div class="ic"><svg><use href="#pre"/></svg></div><b>Expropiativo</b><br>Puede serlo entre colas.</div>
+      <div class="ch"><div class="ic"><svg><use href="#lock"/></svg></div><b>Fixed queues</b><br>The process never changes level.</div>
+      <div class="ch"><div class="ic"><svg><use href="#gear"/></svg></div><b>Own algorithm</b><br>Each queue uses its own.</div>
+      <div class="ch"><div class="ic"><svg><use href="#lay"/></svg></div><b>Rule between queues</b><br>Strict priority or time %.</div>
+      <div class="ch"><div class="ic"><svg><use href="#bolt"/></svg></div><b>Fast decision</b><br>Classified only once.</div>
+      <div class="ch"><div class="ic"><svg><use href="#pre"/></svg></div><b>Preemptive</b><br>It can be, between queues.</div>
     </div>
   </div>
 
   <div class="grow">
-    <h2>Diagrama de flujo</h2>
+    <h2>Flowchart</h2>
     <div class="fig">
       <svg viewBox="0 0 700 345" font-family="Poppins,'Segoe UI',Arial,sans-serif">
         <defs>
@@ -159,73 +157,73 @@ th{background:var(--rl);color:var(--r);font-weight:600}
         </defs>
         <!-- inicio -->
         <rect x="5" y="128" width="100" height="44" rx="22" fill="#1A1A1A"/>
-        <text x="55" y="147" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">Llega un</text>
-        <text x="55" y="162" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">proceso</text>
+        <text x="55" y="147" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">A process</text>
+        <text x="55" y="162" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">arrives</text>
         <!-- decision 1 -->
         <path d="M105 150H112" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)"/>
         <polygon points="165,108 225,150 165,192 105,150" fill="#FBE9E9" stroke="#A71C19" stroke-width="2"/>
-        <text x="165" y="147" text-anchor="middle" font-size="11" font-weight="600" fill="#A71C19">¿Qué tipo</text>
-        <text x="165" y="161" text-anchor="middle" font-size="11" font-weight="600" fill="#A71C19">es?</text>
+        <text x="165" y="147" text-anchor="middle" font-size="11" font-weight="600" fill="#A71C19">What type</text>
+        <text x="165" y="161" text-anchor="middle" font-size="11" font-weight="600" fill="#A71C19">is it?</text>
         <!-- ramas -->
         <g fill="none" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)">
           <path d="M225 150H240V50H255"/><path d="M225 150H255"/><path d="M225 150H240V250H255"/>
         </g>
         <!-- colas -->
         <rect x="255" y="21" width="140" height="58" rx="8" fill="#A71C19"/>
-        <text x="325" y="45" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Sistema</text>
-        <text x="325" y="62" text-anchor="middle" fill="#fff" font-size="10">Prioridad alta · FCFS</text>
+        <text x="325" y="45" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">System</text>
+        <text x="325" y="62" text-anchor="middle" fill="#fff" font-size="10">High priority · FCFS</text>
         <rect x="255" y="121" width="140" height="58" rx="8" fill="#1A1A1A"/>
-        <text x="325" y="145" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Interactivo</text>
-        <text x="325" y="162" text-anchor="middle" fill="#fff" font-size="10">Prioridad media · RR</text>
+        <text x="325" y="145" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Interactive</text>
+        <text x="325" y="162" text-anchor="middle" fill="#fff" font-size="10">Medium priority · RR</text>
         <rect x="255" y="221" width="140" height="58" rx="8" fill="#6B6B6B"/>
-        <text x="325" y="245" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Lotes</text>
-        <text x="325" y="262" text-anchor="middle" fill="#fff" font-size="10">Prioridad baja · FCFS</text>
+        <text x="325" y="245" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Batch</text>
+        <text x="325" y="262" text-anchor="middle" fill="#fff" font-size="10">Low priority · FCFS</text>
         <!-- hacia planificador -->
         <g fill="none" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)">
           <path d="M395 50H415V135H433"/><path d="M395 150H433"/><path d="M395 250H415V165H433"/>
         </g>
         <!-- planificador -->
         <polygon points="485,100 537,150 485,200 433,150" fill="#FBE9E9" stroke="#A71C19" stroke-width="2"/>
-        <text x="485" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">¿Qué cola</text>
-        <text x="485" y="153" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">atiendo</text>
-        <text x="485" y="166" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">ahora?</text>
-        <text x="485" y="88" text-anchor="middle" font-size="9.5" fill="#6B6B6B">prioridad o % de tiempo</text>
+        <text x="485" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">Which queue</text>
+        <text x="485" y="153" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">do I serve</text>
+        <text x="485" y="166" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">now?</text>
+        <text x="485" y="88" text-anchor="middle" font-size="9.5" fill="#6B6B6B">priority or time %</text>
         <path d="M537 150H573" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)"/>
         <!-- CPU -->
         <rect x="575" y="120" width="120" height="60" rx="8" fill="#fff" stroke="#A71C19" stroke-width="3"/>
         <text x="635" y="146" text-anchor="middle" font-size="15" font-weight="700" fill="#A71C19">CPU</text>
-        <text x="635" y="164" text-anchor="middle" font-size="10" fill="#1A1A1A">ejecuta con el</text>
-        <text x="635" y="175" text-anchor="middle" font-size="10" fill="#1A1A1A">algoritmo de su cola</text>
+        <text x="635" y="164" text-anchor="middle" font-size="10" fill="#1A1A1A">runs with its</text>
+        <text x="635" y="175" text-anchor="middle" font-size="10" fill="#1A1A1A">queue's algorithm</text>
         <!-- fin -->
         <path d="M635 120V80" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)"/>
         <rect x="585" y="38" width="100" height="40" rx="20" fill="#1A1A1A"/>
-        <text x="635" y="62" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Termina: sale</text>
+        <text x="635" y="62" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Done: exits</text>
         <!-- retorno -->
         <path d="M635 180V318H325V281" fill="none" stroke="#A71C19" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar)"/>
         <rect x="395" y="303" width="175" height="30" rx="15" fill="#fff"/>
-        <text x="482" y="316" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">Si lo expropian o agota su quantum,</text>
-        <text x="482" y="328" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">vuelve a SU misma cola</text>
+        <text x="482" y="316" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">If preempted or quantum expires,</text>
+        <text x="482" y="328" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">it returns to ITS own queue</text>
       </svg>
     </div>
   </div>
   <div>
-    <h2><i>D</i>Dos formas de repartir la CPU entre colas</h2>
+    <h2><i>D</i>Two ways to share the CPU among queues</h2>
     <div class="row">
       <div class="box">
-        <b style="color:var(--r)">Prioridad estricta (fija)</b>
+        <b style="color:var(--r)">Strict (fixed) priority</b>
         <ul>
-          <li>Una cola se atiende solo si todas las de mayor prioridad están vacías.</li>
-          <li>Si llega un proceso a una cola superior, el que se ejecuta de una cola inferior es expropiado (<em>preemption</em>) y vuelve a esperar en <b>su misma cola</b>.</li>
+          <li>A queue is served only if all higher-priority queues are empty.</li>
+          <li>If a process arrives in a higher queue, the running process from a lower queue is preempted and goes back to wait in <b>its own queue</b>.</li>
         </ul>
       </div>
       <div class="box">
-        <b style="color:var(--r)">Reparto por porcentaje de tiempo</b>
-        <p style="margin-top:.8mm">Cada cola recibe una fracción del tiempo de CPU. Ejemplo clásico:</p>
+        <b style="color:var(--r)">Time-percentage sharing</b>
+        <p style="margin-top:.8mm">Each queue gets a fraction of CPU time. Classic example:</p>
         <div style="display:flex;align-items:center;gap:3mm;margin-top:1.4mm">
           <div class="pie"><span></span></div>
           <div style="font-size:8.6pt;line-height:1.3">
-            <div><span class="dot" style="--c:var(--r)"></span><b>80 %</b> cola interactiva (Round Robin)</div>
-            <div style="margin-top:1mm"><span class="dot" style="--c:var(--k)"></span><b>20 %</b> cola de lotes (FCFS)</div>
+            <div><span class="dot" style="--c:var(--r)"></span><b>80 %</b> interactive queue (Round Robin)</div>
+            <div style="margin-top:1mm"><span class="dot" style="--c:var(--k)"></span><b>20 %</b> batch queue (FCFS)</div>
           </div>
         </div>
       </div>
@@ -233,65 +231,30 @@ th{background:var(--rl);color:var(--r);font-weight:600}
   </div>
 
   <div class="grow">
-    <h2>¿Expropiativa o no? Puede ser las dos</h2>
-    <p style="margin-bottom:1mm">Escenario: el proceso <b>B</b> (lotes, 5 u.) llega en t = 0. El proceso <b>S</b> (sistema, 2 u.) llega en t = 2.</p>
-    <div class="legend"><span><i style="background:var(--g)"></i>B (cola baja)</span><span><i style="background:var(--r)"></i>S (cola alta)</span></div>
+    <h2>Preemptive or not? It can be both</h2>
     <div class="row" style="margin-top:1mm">
       <div class="box" style="display:flex;flex-direction:column;gap:2.5mm">
-        <div><span class="tag k">No expropiativa</span>
-        <p style="margin-top:1.4mm;font-size:8.8pt">B termina su ráfaga antes de ceder la CPU.</p></div>
+        <div><span class="tag k">Non-preemptive</span>
+        <p style="margin-top:1.4mm;font-size:8.8pt">B finishes its burst before giving up the CPU.</p></div>
         <div>
-          <div class="gantt"><span class="arrive">llega S</span><div class="b" style="flex:5">B</div><div class="s" style="flex:2">S</div></div>
+          <div class="gantt"><span class="arrive">S arrives</span><div class="b" style="flex:5">B</div><div class="s" style="flex:2">S</div></div>
           <div class="scale"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
         </div>
-        <div class="kpi"><strong style="color:var(--k)">3 u.</strong>espera de S</div>
+        <div class="kpi"><strong style="color:var(--k)">3 u.</strong>S's waiting time</div>
       </div>
       <div class="box hl" style="display:flex;flex-direction:column;gap:2.5mm">
-        <div><span class="tag">Expropiativa</span>
-        <p style="margin-top:1.4mm;font-size:8.8pt">S desaloja a B en cuanto llega.</p></div>
+        <div><span class="tag">Preemptive</span>
+        <p style="margin-top:1.4mm;font-size:8.8pt">S displaces B as soon as it arrives.</p></div>
         <div>
-          <div class="gantt"><span class="arrive">llega S</span><div class="b" style="flex:2">B</div><div class="s" style="flex:2">S</div><div class="b" style="flex:3">B</div></div>
+          <div class="gantt"><span class="arrive">S arrives</span><div class="b" style="flex:2">B</div><div class="s" style="flex:2">S</div><div class="b" style="flex:3">B</div></div>
           <div class="scale"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
         </div>
-        <div class="kpi"><strong style="color:var(--r)">0 u.</strong>espera de S</div>
+        <div class="kpi"><strong style="color:var(--r)">0 u.</strong>S's waiting time</div>
       </div>
     </div>
-  </div>  
-  <div class="pgn">1 / 2</div>
-</section>
-
-<!-- ============ PÁGINA 2 ============ -->
-<section class="page">
-  
-
-  <div>
-    <h2><i>H</i>Ventajas y desventajas</h2>
-    <div class="row">
-      <div class="box pc ok">
-        <b>Ventajas</b>
-        <ul>
-          <li><svg><use href="#ck"/></svg>Bajo costo de planificación: el proceso ya conoce su cola.</li>
-          <li><svg><use href="#ck"/></svg>Cada tipo de proceso usa el algoritmo que le conviene.</li>
-          <li><svg><use href="#ck"/></svg>Prioridades claras: los procesos críticos pasan primero.</li>
-        </ul>
-      </div>
-      <div class="box pc bad">
-        <b style="color:var(--r)">Desventajas</b>
-        <ul>
-          <li><svg><use href="#al"/></svg><b>Rigidez:</b> no puede cambiar de cola aunque cambie su comportamiento.</li>
-          <li><svg><use href="#al"/></svg><b>Inanición</b> (<em>starvation</em>): con prioridad estricta, una cola baja puede esperar indefinidamente.</li>
-          <li><svg><use href="#al"/></svg><b>Configuración difícil:</b> definir niveles, algoritmos y porcentajes exige criterio.</li>
-        </ul>
-      </div>
-    </div>
-    <p class="note" style="color:var(--r);font-weight:600">La solución clásica a la rigidez y la inanición es el MLFQ, que permite mover procesos entre colas.</p>
   </div>
-  
 
   
-
-  <div class="src">Fuentes: Silberschatz, Galvin y Gagne, <em>Operating System Concepts</em> (capítulo de planificación de CPU); documentación del planificador de Linux.</div>
-  <div class="pgn">2 / 2</div>
-</section>
+  <div class="pgn">1 / 2</div>
 </body>
 </html>
