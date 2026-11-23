@@ -128,13 +128,8 @@ th{background:var(--rl);color:var(--r);font-weight:600}
 
   <div class="box">
     <h2><i>B</i>What is it?</h2>
-    <ul>
-      <li>A CPU scheduling algorithm that splits the ready queue into <b>several independent queues</b>.</li>
-      <li>Each process is assigned <b>permanently</b> to a single queue, based on one of its properties. It never changes queue.</li>
-      <li>Each queue has its <b>own scheduling algorithm</b>.</li>
-      <li>An extra rule shares the CPU <b>among</b> the queues.</li>
-    </ul>
-  </div>
+    <p>A CPU scheduling algorithm that splits the ready queue into <b>several independent queues</b>, one for each type of process.</p>
+</div>
 
   <div>
     <h2><i>G</i>Main features</h2>
@@ -148,64 +143,84 @@ th{background:var(--rl);color:var(--r);font-weight:600}
   </div>
 
   <div class="grow">
-    <h2>Flowchart</h2>
-    <div class="fig">
-      <svg viewBox="0 0 700 345" font-family="Poppins,'Segoe UI',Arial,sans-serif">
-        <defs>
-          <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1A1A1A"/></marker>
-          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A71C19"/></marker>
-        </defs>
-        <!-- inicio -->
-        <rect x="5" y="128" width="100" height="44" rx="22" fill="#1A1A1A"/>
-        <text x="55" y="147" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">A process</text>
-        <text x="55" y="162" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">arrives</text>
-        <!-- decision 1 -->
-        <path d="M105 150H112" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)"/>
-        <polygon points="165,108 225,150 165,192 105,150" fill="#FBE9E9" stroke="#A71C19" stroke-width="2"/>
-        <text x="165" y="147" text-anchor="middle" font-size="11" font-weight="600" fill="#A71C19">What type</text>
-        <text x="165" y="161" text-anchor="middle" font-size="11" font-weight="600" fill="#A71C19">is it?</text>
-        <!-- ramas -->
-        <g fill="none" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)">
-          <path d="M225 150H240V50H255"/><path d="M225 150H255"/><path d="M225 150H240V250H255"/>
-        </g>
-        <!-- colas -->
-        <rect x="255" y="21" width="140" height="58" rx="8" fill="#A71C19"/>
-        <text x="325" y="45" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">System</text>
-        <text x="325" y="62" text-anchor="middle" fill="#fff" font-size="10">High priority · FCFS</text>
-        <rect x="255" y="121" width="140" height="58" rx="8" fill="#1A1A1A"/>
-        <text x="325" y="145" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Interactive</text>
-        <text x="325" y="162" text-anchor="middle" fill="#fff" font-size="10">Medium priority · RR</text>
-        <rect x="255" y="221" width="140" height="58" rx="8" fill="#6B6B6B"/>
-        <text x="325" y="245" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Batch</text>
-        <text x="325" y="262" text-anchor="middle" fill="#fff" font-size="10">Low priority · FCFS</text>
-        <!-- hacia planificador -->
-        <g fill="none" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)">
-          <path d="M395 50H415V135H433"/><path d="M395 150H433"/><path d="M395 250H415V165H433"/>
-        </g>
-        <!-- planificador -->
-        <polygon points="485,100 537,150 485,200 433,150" fill="#FBE9E9" stroke="#A71C19" stroke-width="2"/>
-        <text x="485" y="140" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">Which queue</text>
-        <text x="485" y="153" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">do I serve</text>
-        <text x="485" y="166" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">now?</text>
-        <text x="485" y="88" text-anchor="middle" font-size="9.5" fill="#6B6B6B">priority or time %</text>
-        <path d="M537 150H573" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)"/>
-        <!-- CPU -->
-        <rect x="575" y="120" width="120" height="60" rx="8" fill="#fff" stroke="#A71C19" stroke-width="3"/>
-        <text x="635" y="146" text-anchor="middle" font-size="15" font-weight="700" fill="#A71C19">CPU</text>
-        <text x="635" y="164" text-anchor="middle" font-size="10" fill="#1A1A1A">runs with its</text>
-        <text x="635" y="175" text-anchor="middle" font-size="10" fill="#1A1A1A">queue's algorithm</text>
-        <!-- fin -->
-        <path d="M635 120V80" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)"/>
-        <rect x="585" y="38" width="100" height="40" rx="20" fill="#1A1A1A"/>
-        <text x="635" y="62" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Done: exits</text>
-        <!-- retorno -->
-        <path d="M635 180V318H325V281" fill="none" stroke="#A71C19" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar)"/>
-        <rect x="395" y="303" width="175" height="30" rx="15" fill="#fff"/>
-        <text x="482" y="316" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">If preempted or quantum expires,</text>
-        <text x="482" y="328" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">it returns to ITS own queue</text>
-      </svg>
-    </div>
+  <h2>Flowchart</h2>
+  <div class="fig">
+    <svg viewBox="0 0 700 265" font-family="Poppins,'Segoe UI',Arial,sans-serif">
+      <defs>
+        <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0L10 5L0 10z" fill="#1A1A1A"/>
+        </marker>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0L10 5L0 10z" fill="#A71C19"/>
+        </marker>
+      </defs>
+
+      <!-- inicio -->
+      <rect x="5" y="96" width="95" height="42" rx="21" fill="#1A1A1A"/>
+      <text x="52.5" y="114" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">A process</text>
+      <text x="52.5" y="129" text-anchor="middle" fill="#fff" font-size="12" font-weight="600">arrives</text>
+
+      <!-- decision 1 -->
+      <path d="M100 117H110" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)"/>
+      <polygon points="165,78 225,117 165,156 105,117" fill="#FBE9E9" stroke="#A71C19" stroke-width="2"/>
+      <text x="165" y="114" text-anchor="middle" font-size="11" font-weight="600" fill="#A71C19">What type</text>
+      <text x="165" y="128" text-anchor="middle" font-size="11" font-weight="600" fill="#A71C19">is it?</text>
+
+      <!-- ramas -->
+      <g fill="none" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)">
+        <path d="M225 117H240V42H255"/>
+        <path d="M225 117H255"/>
+        <path d="M225 117H240V192H255"/>
+      </g>
+
+      <!-- colas (más compactas en alto y separación) -->
+      <rect x="255" y="18" width="140" height="48" rx="8" fill="#A71C19"/>
+      <text x="325" y="38" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">System</text>
+      <text x="325" y="54" text-anchor="middle" fill="#fff" font-size="10">High priority · FCFS</text>
+
+      <rect x="255" y="93" width="140" height="48" rx="8" fill="#1A1A1A"/>
+      <text x="325" y="113" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Interactive</text>
+      <text x="325" y="129" text-anchor="middle" fill="#fff" font-size="10">Medium priority · RR</text>
+
+      <rect x="255" y="168" width="140" height="48" rx="8" fill="#6B6B6B"/>
+      <text x="325" y="188" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Batch</text>
+      <text x="325" y="204" text-anchor="middle" fill="#fff" font-size="10">Low priority · FCFS</text>
+
+      <!-- hacia planificador -->
+      <g fill="none" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)">
+        <path d="M395 42H415V105H433"/>
+        <path d="M395 117H433"/>
+        <path d="M395 192H415V129H433"/>
+      </g>
+
+      <!-- planificador -->
+      <polygon points="485,72 537,117 485,162 433,117" fill="#FBE9E9" stroke="#A71C19" stroke-width="2"/>
+      <text x="485" y="108" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">Which queue</text>
+      <text x="485" y="120" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">do I serve</text>
+      <text x="485" y="132" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">now?</text>
+      <text x="485" y="62" text-anchor="middle" font-size="9.5" fill="#6B6B6B">priority or time %</text>
+
+      <path d="M537 117H573" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)"/>
+
+      <!-- CPU -->
+      <rect x="575" y="89" width="120" height="56" rx="8" fill="#fff" stroke="#A71C19" stroke-width="3"/>
+      <text x="635" y="113" text-anchor="middle" font-size="15" font-weight="700" fill="#A71C19">CPU</text>
+      <text x="635" y="129" text-anchor="middle" font-size="10" fill="#1A1A1A">runs with its</text>
+      <text x="635" y="140" text-anchor="middle" font-size="10" fill="#1A1A1A">queue's algorithm</text>
+
+      <!-- fin -->
+      <path d="M635 89V61" stroke="#1A1A1A" stroke-width="2" marker-end="url(#a)"/>
+      <rect x="585" y="23" width="100" height="36" rx="18" fill="#1A1A1A"/>
+      <text x="635" y="45" text-anchor="middle" fill="#fff" font-size="11" font-weight="600">Done: exits</text>
+
+      <!-- retorno -->
+      <path d="M635 145V242H325V218" fill="none" stroke="#A71C19" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar)"/>
+      <rect x="392" y="228" width="182" height="28" rx="14" fill="#fff"/>
+      <text x="483" y="240" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">If preempted or quantum expires,</text>
+      <text x="483" y="252" text-anchor="middle" font-size="10" font-weight="600" fill="#A71C19">it returns to ITS own queue</text>
+    </svg>
   </div>
+</div>
   <div>
     <h2><i>D</i>Two ways to share the CPU among queues</h2>
     <div class="row">
