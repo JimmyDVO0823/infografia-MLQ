@@ -148,43 +148,6 @@ th{background:var(--rl);color:var(--r);font-weight:600}
   </div>
 
   <div>
-    <h2><i>E</i>Estructura típica de colas</h2>
-    <div class="prio"><span>▲ Mayor prioridad</span><span>Menor prioridad ▼</span></div>
-    <div class="stack">
-      <div class="lvl a">Procesos del sistema <small>FCFS</small></div>
-      <div class="lvl b">Procesos interactivos <small>Round Robin</small></div>
-      <div class="lvl c">Edición interactiva <small>cada nivel puede usar otro algoritmo</small></div>
-      <div class="lvl d">Procesos por lotes (<em>batch</em>) <small>FCFS</small></div>
-      <div class="lvl e">Procesos de estudiantes <small>según se defina</small></div>
-    </div>
-  </div>
-
-  <div class="box hl">
-    <h2><i>F</i>Analogía: la sala de urgencias</h2>
-    <p style="font-size:8.8pt;margin-bottom:1.6mm">Un solo médico = <b>CPU</b> · El triage = <b>clasificador</b> · Los pacientes = <b>procesos</b>.</p>
-    <div class="er">
-      <div class="lab q1"><b>Cola 1 · máxima</b><br>Infartos, trauma grave</div>
-      <div class="ppl q1"><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg></div>
-      <div class="ln q1"></div>
-      <div class="doc"><svg><use href="#med"/></svg><br><b>Médico (CPU)</b></div>
-      <div class="lab q2"><b>Cola 2 · media</b><br>Fracturas menores, fiebre alta</div>
-      <div class="ppl q2"><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg></div>
-      <div class="ln m q2"></div>
-      <div class="lab q3"><b>Cola 3 · baja</b><br>Chequeos, renovar recetas</div>
-      <div class="ppl q3"><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg></div>
-      <div class="ln d q3"></div>
-    </div>
-    <ul style="margin-top:2mm;font-size:8.8pt">
-      <li>Mientras haya pacientes en la Cola 1, el médico atiende solo esa fila. Cuando queda vacía pasa a la Cola 2 y luego a la 3.</li>
-      <li><b>Expropiación:</b> si llega un infarto mientras se atiende una fractura, se interrumpe la atención, ese paciente vuelve a esperar en su misma Cola 2 y el médico atiende la emergencia.</li>
-    </ul>
-  </div>
-  <div class="pgn">1 / 2</div>
-</section>
-
-<!-- ============ PÁGINA 2 ============ -->
-<section class="page">
-  <div>
     <h2><i>G</i>Principales características</h2>
     <div class="chars">
       <div class="ch"><div class="ic"><svg><use href="#lock"/></svg></div><b>Colas fijas</b><br>El proceso no cambia de nivel.</div>
@@ -194,6 +157,31 @@ th{background:var(--rl);color:var(--r);font-weight:600}
       <div class="ch"><div class="ic"><svg><use href="#pre"/></svg></div><b>Expropiativo</b><br>Puede serlo entre colas.</div>
     </div>
   </div>
+
+  <div class="box">
+    <h2><i>N</i>Glosario rápido</h2>
+    <div class="gl">
+      <div><b>CPU:</b> unidad que ejecuta las instrucciones.</div>
+      <div><b>Proceso:</b> programa en ejecución.</div>
+      <div><b>Cola de listos:</b> procesos esperando la CPU.</div>
+      <div><b>Quantum:</b> tiempo máximo de CPU por turno.</div>
+      <div><b>Expropiación</b> (<em>preemption</em>): quitar la CPU a un proceso en ejecución.</div>
+      <div><b>Inanición</b> (<em>starvation</em>): esperar indefinidamente.</div>
+      <div><b>FCFS:</b> el primero en llegar se atiende primero.</div>
+      <div><b>Round Robin:</b> turnos de un quantum, en círculo.</div>
+      <div><b>SJF:</b> primero el proceso de ráfaga más corta.</div>
+      <div><b>Tiempo de espera:</b> tiempo en la cola de listos.</div>
+      <div><b>Tiempo de retorno:</b> desde la llegada hasta terminar.</div>
+    </div>
+  </div>
+
+  
+  <div class="pgn">1 / 2</div>
+</section>
+
+<!-- ============ PÁGINA 2 ============ -->
+<section class="page">
+  
 
   <div>
     <h2><i>H</i>Ventajas y desventajas</h2>
@@ -217,90 +205,9 @@ th{background:var(--rl);color:var(--r);font-weight:600}
     </div>
     <p class="note" style="color:var(--r);font-weight:600">La solución clásica a la rigidez y la inanición es el MLFQ, que permite mover procesos entre colas.</p>
   </div>
+  
 
-  <div class="box">
-    <h2><i>J</i>Ejemplo resuelto con diagrama de Gantt</h2>
-    <p style="font-size:8.6pt"><b>Reglas:</b> prioridad estricta entre colas; todos llegan en t = 0. Cola 1 = Sistema (FCFS) · Cola 2 = Interactiva (Round Robin, quantum = 2 ms) · Cola 3 = Por lotes (FCFS).</p>
-    <table>
-      <tr><th>Proceso</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th></tr>
-      <tr><td><b>Cola</b></td><td>1</td><td>2</td><td>2</td><td>3</td><td>1</td></tr>
-      <tr><td><b>Ráfaga (ms)</b></td><td>3</td><td>5</td><td>3</td><td>4</td><td>2</td></tr>
-    </table>
-    <div style="margin-top:2.4mm">
-      <div class="gantt">
-        <div class="q1" style="flex:3">P1</div>
-        <div class="q1" style="flex:2">P5</div>
-        <div class="q2" style="flex:2">P2</div>
-        <div class="q2" style="flex:2">P3</div>
-        <div class="q2" style="flex:2">P2</div>
-        <div class="q2" style="flex:1">P3</div>
-        <div class="q2" style="flex:1">P2</div>
-        <div class="q3" style="flex:4;border-right:none">P4</div>
-      </div>
-      <div class="scale">
-        <span style="flex:3">0</span><span style="flex:2">3</span><span style="flex:2">5</span><span style="flex:2">7</span><span style="flex:2">9</span><span style="flex:1">11</span><span style="flex:1">12</span><span style="flex:4">13</span><span>17</span>
-      </div>
-    </div>
-    <div class="legend">
-      <span class="q1"><span class="dot"></span>Cola 1 · Sistema</span>
-      <span class="q2"><span class="dot"></span>Cola 2 · Interactiva</span>
-      <span class="q3"><span class="dot"></span>Cola 3 · Lotes</span>
-    </div>
-    <table>
-      <tr><th></th><th>P1</th><th>P5</th><th>P2</th><th>P3</th><th>P4</th><th>Promedio</th></tr>
-      <tr><td><b>Espera (ms)</b></td><td>0</td><td>3</td><td>8</td><td>9</td><td>13</td><td><b>33/5 = 6,6</b></td></tr>
-      <tr><td><b>Retorno (ms)</b></td><td>3</td><td>5</td><td>13</td><td>12</td><td>17</td><td><b>50/5 = 10</b></td></tr>
-    </table>
-    <p class="note" style="color:var(--r);font-weight:600">Observación: P4 espera 13 ms por estar en la cola de menor prioridad.</p>
-  </div>
-
-  <div class="row">
-    <div class="box">
-      <h2><i>K</i>Caso real: Linux</h2>
-      <p style="font-size:8.8pt">El planificador organiza las tareas en <b>clases</b> con prioridad estricta entre ellas:</p>
-      <div class="stack" style="margin:1.4mm 0">
-        <div class="lvl a" style="padding:1mm 2.4mm">Deadline <small>plazos estrictos</small></div>
-        <div class="lvl b" style="padding:1mm 2.4mm">Tiempo real <small>FIFO y Round Robin</small></div>
-        <div class="lvl c" style="padding:1mm 2.4mm">Normal <small>CFS / EEVDF, reparto equitativo</small></div>
-        <div class="lvl d" style="padding:1mm 2.4mm">Idle <small>solo si nadie más usa la CPU</small></div>
-      </div>
-      <p style="font-size:8.6pt">Cada clase usa un algoritmo distinto, por eso se parece a un MLQ.</p>
-      <p class="note"><b>Nota honesta:</b> NO es un MLQ puro; solo comparte la idea de varias clases con prioridad entre ellas y algoritmo propio en cada una. Otros sistemas, como Windows, también usan niveles de prioridad con turnos dentro de cada nivel, sin que sean MLQ puros.</p>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:3.4mm">
-      <div class="box hl" style="border:1.5px solid var(--r)">
-        <h2><i>L</i>Conclusiones</h2>
-        <ul>
-          <li>El MLQ clasifica los procesos por tipo y da a cada uno la política que necesita.</li>
-          <li>Es simple y eficiente, pero poco flexible.</li>
-          <li>Su mayor riesgo es la inanición de las colas de menor prioridad.</li>
-          <li>Para corregirlo existe el MLFQ.</li>
-        </ul>
-      </div>
-      <div class="box" style="border:1.5px dashed var(--r)">
-        <h2><i>M</i>Mini ejercicio</h2>
-        <p style="font-size:8.8pt"><b>¿Qué pasa si llega un proceso a la Cola 1 en t = 6 ms?</b></p>
-        <p style="font-size:8.6pt;margin-top:1mm"><b style="color:var(--r)">Respuesta:</b> con prioridad estricta y expropiación, desaloja al proceso que use la CPU en una cola inferior; este vuelve a esperar en su misma cola. Así se evidencia el riesgo de inanición.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="box">
-    <h2><i>N</i>Glosario rápido</h2>
-    <div class="gl">
-      <div><b>CPU:</b> unidad que ejecuta las instrucciones.</div>
-      <div><b>Proceso:</b> programa en ejecución.</div>
-      <div><b>Cola de listos:</b> procesos esperando la CPU.</div>
-      <div><b>Quantum:</b> tiempo máximo de CPU por turno.</div>
-      <div><b>Expropiación</b> (<em>preemption</em>): quitar la CPU a un proceso en ejecución.</div>
-      <div><b>Inanición</b> (<em>starvation</em>): esperar indefinidamente.</div>
-      <div><b>FCFS:</b> el primero en llegar se atiende primero.</div>
-      <div><b>Round Robin:</b> turnos de un quantum, en círculo.</div>
-      <div><b>SJF:</b> primero el proceso de ráfaga más corta.</div>
-      <div><b>Tiempo de espera:</b> tiempo en la cola de listos.</div>
-      <div><b>Tiempo de retorno:</b> desde la llegada hasta terminar.</div>
-    </div>
-  </div>
+  
 
   <div class="src">Fuentes: Silberschatz, Galvin y Gagne, <em>Operating System Concepts</em> (capítulo de planificación de CPU); documentación del planificador de Linux.</div>
   <div class="pgn">2 / 2</div>
