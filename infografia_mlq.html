@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>MLQ: Planificación con colas multinivel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{--r:#A71C19;--k:#1A1A1A;--g:#6B6B6B;--rl:#FBE9E9;--line:#e3d3d3}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Poppins,"Segoe UI",Helvetica,Arial,sans-serif;font-weight:300;font-size:9.2pt;line-height:1.35;color:var(--k);background:#e9e9e9}
+.page{width:210mm;min-height:297mm;margin:8mm auto;background:#fff;padding:10mm 11mm;display:flex;flex-direction:column;gap:3.4mm}
+@page{size:A4;margin:0}
+@media print{body{background:#fff}.page{margin:0;height:297mm;min-height:0;overflow:hidden;page-break-after:always;break-after:page}.page:last-child{page-break-after:auto}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+h1{font-weight:700;font-size:25pt;line-height:1.1;color:#fff}
+h2{font-weight:700;font-size:10.5pt;letter-spacing:.02em;text-transform:uppercase;color:var(--r);display:flex;align-items:center;gap:2mm;margin-bottom:1.6mm}
+h2 i{width:5mm;height:5mm;border-radius:50%;background:var(--r);color:#fff;font-style:normal;font-size:8pt;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+b,strong{font-weight:600}
+.hero{background:var(--r);border-radius:3mm;padding:6mm 7mm;color:#fff}
+.hero p{font-size:11pt;margin-top:2mm;font-weight:300}
+.row{display:flex;gap:3.4mm}.row>*{flex:1}
+.box{border:1px solid var(--line);border-radius:2.5mm;padding:3mm 3.5mm}
+.hl{background:var(--rl);border:none}
+.note{font-size:8.6pt;color:var(--g);margin-top:1.4mm}
+ul{list-style:none}
+li{margin:.8mm 0;padding-left:3.6mm;position:relative}
+li:before{content:"";position:absolute;left:0;top:.5em;width:1.6mm;height:1.6mm;border-radius:50%;background:var(--r)}
+.q1{--c:var(--r)}.q2{--c:var(--k)}.q3{--c:var(--g)}
+.dot{display:inline-block;width:2.6mm;height:2.6mm;border-radius:50%;background:var(--c);margin-right:1.2mm;vertical-align:middle}
+/* flow */
+.flow{display:flex;align-items:stretch;gap:0}
+.step{flex:1;border:1px solid var(--line);border-radius:2.5mm;padding:2.6mm;position:relative}
+.step .n{width:6mm;height:6mm;border-radius:50%;background:var(--r);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:1.2mm}
+.step b{display:block;color:var(--r)}
+.arr{width:6mm;display:flex;align-items:center;justify-content:center;color:var(--r);font-weight:700;font-size:13pt}
+/* compare */
+.pie{width:23mm;height:23mm;border-radius:50%;background:conic-gradient(var(--k) 0 80%,var(--g) 80% 100%);flex:none;display:flex;align-items:center;justify-content:center}
+.pie span{background:#fff;width:11mm;height:11mm;border-radius:50%}
+.bar{display:flex;height:6mm;border-radius:1.5mm;overflow:hidden;margin:1.4mm 0;color:#fff;font-size:8.4pt;font-weight:600}
+.bar div{display:flex;align-items:center;justify-content:center}
+/* stack */
+.stack{display:flex;flex-direction:column;gap:1mm}
+.lvl{display:flex;align-items:center;justify-content:space-between;border-radius:1.5mm;padding:1.6mm 3mm;color:#fff;font-weight:600}
+.lvl small{font-weight:300;font-size:8.4pt}
+.lvl.a{background:var(--r);width:100%}.lvl.b{background:var(--r);opacity:.88;width:92%}.lvl.c{background:var(--k);width:84%}.lvl.d{background:var(--g);width:76%}.lvl.e{background:var(--g);opacity:.8;width:68%}
+.prio{display:flex;justify-content:space-between;font-size:8.4pt;color:var(--g);margin-bottom:1mm}
+/* er */
+.er{display:grid;grid-template-columns:30mm 1fr 20mm 25mm;align-items:center;gap:1.2mm 1.5mm}
+.er .lab{font-size:8.6pt;line-height:1.25}.er .lab b{color:var(--c)}
+.ppl{display:flex;gap:.8mm;color:var(--c)}.ppl svg{width:5.2mm;height:5.2mm}
+.ln{height:0;position:relative;border-top:1.2mm solid var(--c)}
+.ln:after{content:"";position:absolute;right:-1mm;top:-2.1mm;border-left:3mm solid var(--c);border-top:1.5mm solid transparent;border-bottom:1.5mm solid transparent}
+.ln.m{border-top-width:.7mm}.ln.m:after{top:-1.6mm}
+.ln.d{border-top:.6mm dashed var(--c)}.ln.d:after{top:-1.5mm;border-left-width:2.6mm}
+.doc{grid-column:4;grid-row:1/4;background:var(--rl);border:1px solid var(--r);border-radius:2.5mm;text-align:center;padding:2mm;font-size:8.4pt;line-height:1.2}
+.doc svg{width:11mm;height:11mm;color:var(--r)}
+/* chars */
+.chars{display:grid;grid-template-columns:repeat(5,1fr);gap:2.4mm}
+.ch{text-align:center;font-size:8.6pt;line-height:1.25}
+.ch .ic{width:9mm;height:9mm;border-radius:50%;background:var(--r);color:#fff;margin:0 auto 1mm;display:flex;align-items:center;justify-content:center}
+.ch .ic svg{width:5mm;height:5mm}
+/* pros cons */
+.pc li:before{display:none}.pc li{padding-left:5mm}
+.pc svg{position:absolute;left:0;top:.7mm;width:3.6mm;height:3.6mm}
+.ok{color:var(--k)}.ok svg{color:var(--k)}.bad svg{color:var(--r)}
+/* gantt */
+.gantt{display:flex;height:9mm;border-radius:1.5mm;overflow:hidden;border:1px solid #fff}
+.gantt div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:8.6pt;border-right:1px solid #fff;background:var(--c)}
+.scale{display:flex;font-size:8pt;color:var(--g);margin-top:.6mm}
+.scale span{flex:1;text-align:left;transform:translateX(-.8mm)}
+.scale span:last-child{flex:0;transform:none}
+table{border-collapse:collapse;width:100%;font-size:8.6pt;margin-top:1.4mm}
+th,td{border-bottom:1px solid var(--line);padding:.7mm 1.6mm;text-align:center}
+th{background:var(--rl);color:var(--r);font-weight:600}
+.legend{display:flex;gap:4mm;font-size:8.6pt;margin:1.2mm 0}
+/* gloss */
+.gl{display:grid;grid-template-columns:repeat(3,1fr);gap:.8mm 4mm;font-size:8.6pt;line-height:1.25}
+.gl b{color:var(--r)}
+.src{font-size:8pt;color:var(--g);margin-top:auto}
+.pgn{font-size:8pt;color:var(--g);text-align:right}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="p" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4" fill="currentColor"/><path d="M4 22c0-5 3.5-8 8-8s8 3 8 8z" fill="currentColor"/></symbol>
+<symbol id="ck" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M6.5 12.5l4 4 7-8" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="al" viewBox="0 0 24 24"><path d="M12 2L23 21H1z" fill="currentColor"/><path d="M12 9v6M12 17.6v1" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></symbol>
+<symbol id="lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="12" rx="2" fill="currentColor"/><path d="M8 10V7a4 4 0 018 0v3" stroke="currentColor" stroke-width="2.4" fill="none"/></symbol>
+<symbol id="gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2.6" fill="none"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+<symbol id="lay" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="4" rx="1" fill="currentColor"/><rect x="5" y="10" width="14" height="4" rx="1" fill="currentColor"/><rect x="7" y="17" width="10" height="4" rx="1" fill="currentColor"/></symbol>
+<symbol id="bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z" fill="currentColor"/></symbol>
+<symbol id="pre" viewBox="0 0 24 24"><rect x="5" y="4" width="4.5" height="16" rx="1" fill="currentColor"/><rect x="14.5" y="4" width="4.5" height="16" rx="1" fill="currentColor"/></symbol>
+<symbol id="med" viewBox="0 0 24 24"><circle cx="12" cy="6" r="4" fill="currentColor"/><path d="M4 22c0-5 3.5-9 8-9s8 4 8 9z" fill="currentColor"/><path d="M11 15h2v4h-2zM10 16h4v2h-4z" fill="#FBE9E9"/></symbol>
+</svg>
+
+<!-- ============ PÁGINA 1 ============ -->
+<section class="page">
+  <div class="hero">
+    <h1>MLQ: Planificación con colas multinivel</h1>
+    <p>No todos los procesos son iguales, así que no esperan en la misma fila.</p>
+  </div>
+
+  <div class="box">
+    <h2><i>B</i>¿Qué es?</h2>
+    <ul>
+      <li>Algoritmo de planificación de CPU que divide la cola de listos (<em>ready queue</em>) en <b>varias colas independientes</b>.</li>
+      <li>Cada proceso se asigna de forma <b>permanente</b> a una sola cola, según una propiedad suya (tipo, prioridad, memoria…). Nunca cambia de cola.</li>
+      <li>Cada cola tiene su <b>propio algoritmo</b> de planificación.</li>
+      <li>Una regla adicional reparte la CPU <b>entre</b> las colas.</li>
+    </ul>
+    <p class="note">Nota: pertenece a la familia de los algoritmos por prioridades. Su «hermano mejorado» es el MLFQ (colas multinivel con retroalimentación).</p>
+  </div>
+
+  <div>
+    <h2><i>C</i>¿Cómo funciona?</h2>
+    <div class="flow">
+      <div class="step"><div class="n">1</div><b>Clasificar</b>Al llegar, el proceso se identifica por su tipo: sistema, interactivo, por lotes…</div>
+      <div class="arr">➜</div>
+      <div class="step"><div class="n">2</div><b>Asignar</b>Entra a su cola y permanece en ella hasta terminar.</div>
+      <div class="arr">➜</div>
+      <div class="step"><div class="n">3</div><b>Entre colas</b>Se decide qué cola usa la CPU.</div>
+      <div class="arr">➜</div>
+      <div class="step"><div class="n">4</div><b>Dentro de la cola</b>La cola elegida aplica su algoritmo: FCFS, Round Robin, SJF u otro.</div>
+    </div>
+  </div>
+
+  <div>
+    <h2><i>D</i>Dos formas de repartir la CPU entre colas</h2>
+    <div class="row">
+      <div class="box">
+        <b style="color:var(--r)">Prioridad estricta (fija)</b>
+        <ul>
+          <li>Una cola se atiende solo si todas las de mayor prioridad están vacías.</li>
+          <li>Si llega un proceso a una cola superior, el que se ejecuta de una cola inferior es expropiado (<em>preemption</em>) y vuelve a esperar en <b>su misma cola</b>.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <b style="color:var(--r)">Reparto por porcentaje de tiempo</b>
+        <p style="margin-top:.8mm">Cada cola recibe una fracción del tiempo de CPU. Ejemplo clásico:</p>
+        <div style="display:flex;align-items:center;gap:3mm;margin-top:1.4mm">
+          <div class="pie"><span></span></div>
+          <div style="font-size:8.6pt;line-height:1.3">
+            <div><span class="dot" style="--c:var(--k)"></span><b>80 %</b> cola interactiva (Round Robin)</div>
+            <div style="margin-top:1mm"><span class="dot" style="--c:var(--g)"></span><b>20 %</b> cola de lotes (FCFS)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h2><i>E</i>Estructura típica de colas</h2>
+    <div class="prio"><span>▲ Mayor prioridad</span><span>Menor prioridad ▼</span></div>
+    <div class="stack">
+      <div class="lvl a">Procesos del sistema <small>FCFS</small></div>
+      <div class="lvl b">Procesos interactivos <small>Round Robin</small></div>
+      <div class="lvl c">Edición interactiva <small>cada nivel puede usar otro algoritmo</small></div>
+      <div class="lvl d">Procesos por lotes (<em>batch</em>) <small>FCFS</small></div>
+      <div class="lvl e">Procesos de estudiantes <small>según se defina</small></div>
+    </div>
+  </div>
+
+  <div class="box hl">
+    <h2><i>F</i>Analogía: la sala de urgencias</h2>
+    <p style="font-size:8.8pt;margin-bottom:1.6mm">Un solo médico = <b>CPU</b> · El triage = <b>clasificador</b> · Los pacientes = <b>procesos</b>.</p>
+    <div class="er">
+      <div class="lab q1"><b>Cola 1 · máxima</b><br>Infartos, trauma grave</div>
+      <div class="ppl q1"><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg></div>
+      <div class="ln q1"></div>
+      <div class="doc"><svg><use href="#med"/></svg><br><b>Médico (CPU)</b></div>
+      <div class="lab q2"><b>Cola 2 · media</b><br>Fracturas menores, fiebre alta</div>
+      <div class="ppl q2"><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg></div>
+      <div class="ln m q2"></div>
+      <div class="lab q3"><b>Cola 3 · baja</b><br>Chequeos, renovar recetas</div>
+      <div class="ppl q3"><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg><svg><use href="#p"/></svg></div>
+      <div class="ln d q3"></div>
+    </div>
+    <ul style="margin-top:2mm;font-size:8.8pt">
+      <li>Mientras haya pacientes en la Cola 1, el médico atiende solo esa fila. Cuando queda vacía pasa a la Cola 2 y luego a la 3.</li>
+      <li><b>Expropiación:</b> si llega un infarto mientras se atiende una fractura, se interrumpe la atención, ese paciente vuelve a esperar en su misma Cola 2 y el médico atiende la emergencia.</li>
+    </ul>
+  </div>
+  <div class="pgn">1 / 2</div>
+</section>
+
+<!-- ============ PÁGINA 2 ============ -->
+<section class="page">
+  <div>
+    <h2><i>G</i>Principales características</h2>
+    <div class="chars">
+      <div class="ch"><div class="ic"><svg><use href="#lock"/></svg></div><b>Colas fijas</b><br>El proceso no cambia de nivel.</div>
+      <div class="ch"><div class="ic"><svg><use href="#gear"/></svg></div><b>Algoritmo propio</b><br>Cada cola usa el suyo.</div>
+      <div class="ch"><div class="ic"><svg><use href="#lay"/></svg></div><b>Regla entre colas</b><br>Prioridad estricta o % de tiempo.</div>
+      <div class="ch"><div class="ic"><svg><use href="#bolt"/></svg></div><b>Decisión rápida</b><br>Se clasifica una sola vez.</div>
+      <div class="ch"><div class="ic"><svg><use href="#pre"/></svg></div><b>Expropiativo</b><br>Puede serlo entre colas.</div>
+    </div>
+  </div>
+
+  <div>
+    <h2><i>H</i>Ventajas y desventajas</h2>
+    <div class="row">
+      <div class="box pc ok">
+        <b>Ventajas</b>
+        <ul>
+          <li><svg><use href="#ck"/></svg>Bajo costo de planificación: el proceso ya conoce su cola.</li>
+          <li><svg><use href="#ck"/></svg>Cada tipo de proceso usa el algoritmo que le conviene.</li>
+          <li><svg><use href="#ck"/></svg>Prioridades claras: los procesos críticos pasan primero.</li>
+        </ul>
+      </div>
+      <div class="box pc bad">
+        <b style="color:var(--r)">Desventajas</b>
+        <ul>
+          <li><svg><use href="#al"/></svg><b>Rigidez:</b> no puede cambiar de cola aunque cambie su comportamiento.</li>
+          <li><svg><use href="#al"/></svg><b>Inanición</b> (<em>starvation</em>): con prioridad estricta, una cola baja puede esperar indefinidamente.</li>
+          <li><svg><use href="#al"/></svg><b>Configuración difícil:</b> definir niveles, algoritmos y porcentajes exige criterio.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note" style="color:var(--r);font-weight:600">La solución clásica a la rigidez y la inanición es el MLFQ, que permite mover procesos entre colas.</p>
+  </div>
+
+  <div class="box">
+    <h2><i>J</i>Ejemplo resuelto con diagrama de Gantt</h2>
+    <p style="font-size:8.6pt"><b>Reglas:</b> prioridad estricta entre colas; todos llegan en t = 0. Cola 1 = Sistema (FCFS) · Cola 2 = Interactiva (Round Robin, quantum = 2 ms) · Cola 3 = Por lotes (FCFS).</p>
+    <table>
+      <tr><th>Proceso</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th></tr>
+      <tr><td><b>Cola</b></td><td>1</td><td>2</td><td>2</td><td>3</td><td>1</td></tr>
+      <tr><td><b>Ráfaga (ms)</b></td><td>3</td><td>5</td><td>3</td><td>4</td><td>2</td></tr>
+    </table>
+    <div style="margin-top:2.4mm">
+      <div class="gantt">
+        <div class="q1" style="flex:3">P1</div>
+        <div class="q1" style="flex:2">P5</div>
+        <div class="q2" style="flex:2">P2</div>
+        <div class="q2" style="flex:2">P3</div>
+        <div class="q2" style="flex:2">P2</div>
+        <div class="q2" style="flex:1">P3</div>
+        <div class="q2" style="flex:1">P2</div>
+        <div class="q3" style="flex:4;border-right:none">P4</div>
+      </div>
+      <div class="scale">
+        <span style="flex:3">0</span><span style="flex:2">3</span><span style="flex:2">5</span><span style="flex:2">7</span><span style="flex:2">9</span><span style="flex:1">11</span><span style="flex:1">12</span><span style="flex:4">13</span><span>17</span>
+      </div>
+    </div>
+    <div class="legend">
+      <span class="q1"><span class="dot"></span>Cola 1 · Sistema</span>
+      <span class="q2"><span class="dot"></span>Cola 2 · Interactiva</span>
+      <span class="q3"><span class="dot"></span>Cola 3 · Lotes</span>
+    </div>
+    <table>
+      <tr><th></th><th>P1</th><th>P5</th><th>P2</th><th>P3</th><th>P4</th><th>Promedio</th></tr>
+      <tr><td><b>Espera (ms)</b></td><td>0</td><td>3</td><td>8</td><td>9</td><td>13</td><td><b>33/5 = 6,6</b></td></tr>
+      <tr><td><b>Retorno (ms)</b></td><td>3</td><td>5</td><td>13</td><td>12</td><td>17</td><td><b>50/5 = 10</b></td></tr>
+    </table>
+    <p class="note" style="color:var(--r);font-weight:600">Observación: P4 espera 13 ms por estar en la cola de menor prioridad.</p>
+  </div>
+
+  <div class="row">
+    <div class="box">
+      <h2><i>K</i>Caso real: Linux</h2>
+      <p style="font-size:8.8pt">El planificador organiza las tareas en <b>clases</b> con prioridad estricta entre ellas:</p>
+      <div class="stack" style="margin:1.4mm 0">
+        <div class="lvl a" style="padding:1mm 2.4mm">Deadline <small>plazos estrictos</small></div>
+        <div class="lvl b" style="padding:1mm 2.4mm">Tiempo real <small>FIFO y Round Robin</small></div>
+        <div class="lvl c" style="padding:1mm 2.4mm">Normal <small>CFS / EEVDF, reparto equitativo</small></div>
+        <div class="lvl d" style="padding:1mm 2.4mm">Idle <small>solo si nadie más usa la CPU</small></div>
+      </div>
+      <p style="font-size:8.6pt">Cada clase usa un algoritmo distinto, por eso se parece a un MLQ.</p>
+      <p class="note"><b>Nota honesta:</b> NO es un MLQ puro; solo comparte la idea de varias clases con prioridad entre ellas y algoritmo propio en cada una. Otros sistemas, como Windows, también usan niveles de prioridad con turnos dentro de cada nivel, sin que sean MLQ puros.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3.4mm">
+      <div class="box hl" style="border:1.5px solid var(--r)">
+        <h2><i>L</i>Conclusiones</h2>
+        <ul>
+          <li>El MLQ clasifica los procesos por tipo y da a cada uno la política que necesita.</li>
+          <li>Es simple y eficiente, pero poco flexible.</li>
+          <li>Su mayor riesgo es la inanición de las colas de menor prioridad.</li>
+          <li>Para corregirlo existe el MLFQ.</li>
+        </ul>
+      </div>
+      <div class="box" style="border:1.5px dashed var(--r)">
+        <h2><i>M</i>Mini ejercicio</h2>
+        <p style="font-size:8.8pt"><b>¿Qué pasa si llega un proceso a la Cola 1 en t = 6 ms?</b></p>
+        <p style="font-size:8.6pt;margin-top:1mm"><b style="color:var(--r)">Respuesta:</b> con prioridad estricta y expropiación, desaloja al proceso que use la CPU en una cola inferior; este vuelve a esperar en su misma cola. Así se evidencia el riesgo de inanición.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h2><i>N</i>Glosario rápido</h2>
+    <div class="gl">
+      <div><b>CPU:</b> unidad que ejecuta las instrucciones.</div>
+      <div><b>Proceso:</b> programa en ejecución.</div>
+      <div><b>Cola de listos:</b> procesos esperando la CPU.</div>
+      <div><b>Quantum:</b> tiempo máximo de CPU por turno.</div>
+      <div><b>Expropiación</b> (<em>preemption</em>): quitar la CPU a un proceso en ejecución.</div>
+      <div><b>Inanición</b> (<em>starvation</em>): esperar indefinidamente.</div>
+      <div><b>FCFS:</b> el primero en llegar se atiende primero.</div>
+      <div><b>Round Robin:</b> turnos de un quantum, en círculo.</div>
+      <div><b>SJF:</b> primero el proceso de ráfaga más corta.</div>
+      <div><b>Tiempo de espera:</b> tiempo en la cola de listos.</div>
+      <div><b>Tiempo de retorno:</b> desde la llegada hasta terminar.</div>
+    </div>
+  </div>
+
+  <div class="src">Fuentes: Silberschatz, Galvin y Gagne, <em>Operating System Concepts</em> (capítulo de planificación de CPU); documentación del planificador de Linux.</div>
+  <div class="pgn">2 / 2</div>
+</section>
+</body>
+</html>
